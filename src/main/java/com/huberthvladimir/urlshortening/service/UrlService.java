@@ -18,6 +18,10 @@ public class UrlService {
         this.randomIdGenerator = randomIdGenerator;
     }
 
+    public UrlModel listUrl(String shortUrl) {
+        return urlRepository.findByShortCodeContaining(shortUrl);
+    }
+
     public UrlModel saveUrl(LinkRequestDto linkRequestDto) {
         UrlModel url = new UrlModel();
         UrlModel urlAlreadyExist = urlRepository.findByUrlContaining(linkRequestDto.url());
