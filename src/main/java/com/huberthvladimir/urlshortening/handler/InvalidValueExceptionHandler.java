@@ -26,8 +26,8 @@ public class InvalidValueExceptionHandler extends ResponseEntityExceptionHandler
     private ResponseEntity<StandardErrorDto> InexistentUrlHandler(InexistentUrlException exception) {
         StandardErrorDto threatResponse = new StandardErrorDto(
                 exception.getMessage(),
-                HttpStatus.BAD_REQUEST);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(threatResponse);
+                HttpStatus.NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(threatResponse);
 
     }
 }
