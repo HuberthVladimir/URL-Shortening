@@ -1,9 +1,13 @@
 package com.huberthvladimir.urlshortening.service;
 
+import java.util.regex.Pattern;
+
 import org.springframework.stereotype.Service;
 
 import com.huberthvladimir.urlshortening.domain.UrlModel;
 import com.huberthvladimir.urlshortening.dto.LinkRequestDto;
+import com.huberthvladimir.urlshortening.exception.InexistentUrlException;
+import com.huberthvladimir.urlshortening.exception.InvalidValueException;
 import com.huberthvladimir.urlshortening.repositories.UrlRepository;
 
 @Service
@@ -19,10 +23,20 @@ public class UrlService {
     }
 
     public UrlModel listUrl(String shortUrl) {
-        return urlRepository.findByShortCodeContaining(shortUrl);
+        UrlModel urlModel = urlRepository.findByShortCodeContaining(shortUrl);
+        if (urlModel == null) {
+            throw new InexistentUrlException(); 
+        }
+        return urlModel;
     }
 
     public UrlModel saveUrl(LinkRequestDto linkRequestDto) {
+        String patterRegex = "https?:\\/\\/(www\\.)?[a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)";
+
+        if (linkRequestDto.url() == null || !Pattern.matches(patterRegex, linkRequestDto.url())) {
+            throw new InvalidValueException();
+        }
+
         UrlModel url = new UrlModel();
         UrlModel urlAlreadyExist = urlRepository.findByUrlContaining(linkRequestDto.url());
         
