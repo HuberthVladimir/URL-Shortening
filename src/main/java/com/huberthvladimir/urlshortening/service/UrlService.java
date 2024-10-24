@@ -72,4 +72,12 @@ public class UrlService {
         urlRepository.save(urlModel);
         return urlModel;
     }
+
+    public void deleteShortCode(String shortUrl) {
+        UrlModel urlModel = urlRepository.findByShortCode(shortUrl);
+        if (urlModel == null) {
+            throw new InexistentUrlException(); 
+        }
+        urlRepository.delete(urlModel);
+    }
 }
