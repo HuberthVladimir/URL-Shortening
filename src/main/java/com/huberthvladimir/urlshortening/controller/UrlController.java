@@ -2,6 +2,7 @@ package com.huberthvladimir.urlshortening.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,9 +35,15 @@ public class UrlController {
         return ResponseEntity.status(HttpStatus.CREATED).body(urlService.saveUrl(link));
     }
 
-    @PutMapping
+    @PutMapping("{shortUrl}")
     public ResponseEntity<UrlModel> UpdateUrl(@PathVariable String shortUrl, @RequestBody LinkRequestDto link) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(urlService.updateUrl(shortUrl, link));
+        return ResponseEntity.status(HttpStatus.OK).body(urlService.updateUrl(shortUrl, link));
+    }
+    
+    @DeleteMapping("{shortUrl}")
+    public ResponseEntity<Void> DeleteUrl(@PathVariable String shortUrl) {
+        urlService.deleteShortCode(shortUrl);
+        return ResponseEntity.noContent().build();
     }
 
 }
