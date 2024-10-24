@@ -68,7 +68,7 @@ public class UrlService {
             throw new InexistentUrlException();
         }
 
-        urlModel.SetUrl(shortUrl);
+        urlModel.SetUrl(linkRequestDto.url());
         urlRepository.save(urlModel);
         return urlModel;
     }
