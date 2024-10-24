@@ -23,7 +23,7 @@ public class UrlService {
     }
 
     public UrlModel listUrl(String shortUrl) {
-        UrlModel urlModel = urlRepository.findByShortCodeContaining(shortUrl);
+        UrlModel urlModel = urlRepository.findByShortCode(shortUrl);
         if (urlModel == null) {
             throw new InexistentUrlException(); 
         }
@@ -38,7 +38,7 @@ public class UrlService {
         }
 
         UrlModel url = new UrlModel();
-        UrlModel urlAlreadyExist = urlRepository.findByUrlContaining(linkRequestDto.url());
+        UrlModel urlAlreadyExist = urlRepository.findByUrl(linkRequestDto.url());
         
         if(urlAlreadyExist != null) {
             return urlAlreadyExist;
@@ -54,5 +54,22 @@ public class UrlService {
         url.setShortCode(shortCode);
 
         return urlRepository.save(url);
+    }
+
+    public UrlModel updateUrl(String shortUrl, LinkRequestDto linkRequestDto) {
+        String patterRegex = "https?:\\/\\/(www\\.)?[a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)";
+        UrlModel urlModel = urlRepository.findByShortCode(shortUrl);
+
+        if (linkRequestDto.url() == null || !Pattern.matches(patterRegex, linkRequestDto.url())) {
+            throw new InvalidValueException();
+        }
+
+        if (urlModel == null) {
+            throw new InexistentUrlException();
+        }
+
+        urlModel.SetUrl(shortUrl);
+        urlRepository.save(urlModel);
+        return urlModel;
     }
 }
