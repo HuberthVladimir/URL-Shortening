@@ -11,11 +11,11 @@ public class RandomIdGenerator {
 
     private final static Random random = new Random();
 
-    public String getBase64(int length) {
+    public String getBase62(int length) {
         var sb = new StringBuilder(length);
 
         for (int i = 0; i < length; i++)
-            sb.append(base62chars[random.nextInt(64)]);
+            sb.append(base62chars[random.nextInt(62)]);
 
         return sb.toString();
     }
