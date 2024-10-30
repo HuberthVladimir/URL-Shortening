@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 
+import com.huberthvladimir.urlshortening.domain.StatsModel;
 import com.huberthvladimir.urlshortening.domain.UrlModel;
 import com.huberthvladimir.urlshortening.dto.LinkRequestDto;
 import com.huberthvladimir.urlshortening.exception.InexistentUrlException;
@@ -43,15 +44,20 @@ public class UrlService {
         if(urlAlreadyExist != null) {
             return urlAlreadyExist;
         }
-        url.SetUrl(linkRequestDto.url());
 
         String shortCode;
 
         do {
-            shortCode = randomIdGenerator.getBase64(8);
+            shortCode = randomIdGenerator.getBase62(8);
         } while (urlRepository.existsByShortCode(shortCode));
 
+        url.SetUrl(linkRequestDto.url());
         url.setShortCode(shortCode);
+        
+        StatsModel stats = new StatsModel();
+        stats.setAccessCount(0);
+        stats.setUrl(url);
+        url.setStats(stats);
 
         return urlRepository.save(url);
     }
