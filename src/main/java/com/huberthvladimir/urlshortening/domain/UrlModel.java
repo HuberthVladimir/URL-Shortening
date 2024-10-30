@@ -7,12 +7,16 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 
@@ -36,6 +40,10 @@ public class UrlModel implements Serializable {
 
     @LastModifiedDate 
     private Instant updatedAt;
+
+    @OneToOne(mappedBy = "url", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private StatsModel stats;
 
     public int getId() {
         return id;
@@ -71,5 +79,13 @@ public class UrlModel implements Serializable {
 
     public void setUpdatedAt(Instant updateAt) {
         this.updatedAt = updateAt;
+    }
+
+    public StatsModel getStats() {
+        return stats;
+    }
+
+    public void setStats(StatsModel stats) {
+        this.stats = stats;
     }
 }
